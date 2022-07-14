@@ -1,0 +1,60 @@
+{
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.12/MicrosoftTeams.schema.json",
+  "version": "1.0.0",
+  "manifestVersion": "1.12",
+  "id": "ba45b0c9-8f12-45b0-9b86-179b3352bb19",
+  "packageName": "com.microsoft.teams.pixelart",
+  "name": {
+    "short": "Pixel Art",
+    "full": "Pixel Art"
+  },
+  "developer": {
+    "name": "Your name here",
+    "mpnId": "",
+    "websiteUrl": "https://www.example.com",
+    "privacyUrl": "https://www.example.com/PrivacyStatement",
+    "termsOfUseUrl": "https://www.example.com/TermsOfUse"
+  },
+  "description": {
+    "short": "Cost user stories with this fun agile poker planning game!",
+    "full": "Doing real work has never been this fun...or productive!"
+  },
+  "icons": {
+    "outline": "outline.png",
+    "color": "color.png"
+  },
+  "accentColor": "#ffffff",
+  "configurableTabs": [
+    {
+      "configurationUrl": "https://5e03-172-124-184-122.ngrok.io/config?inTeams=true",
+      "canUpdateConfiguration": false,
+      "scopes": ["groupchat"],
+      "context": ["meetingSidePanel", "meetingStage"]
+    }
+  ],
+  "validDomains": ["*.ngrok.io"],
+  "showLoadingIndicator": true,
+  "authorization": {
+    "permissions": {
+      "orgWide": [],
+      "resourceSpecific": [
+        {
+          "name": "MeetingStage.Write.Chat",
+          "type": "Delegated"
+        },
+        {
+          "name": "ChannelMeetingStage.Write.Group",
+          "type": "Delegated"
+        },
+        {
+          "name": "LiveShareSession.ReadWrite.Chat",
+          "type": "Delegated"
+        },
+        {
+          "name": "LiveShareSession.ReadWrite.Group",
+          "type": "Delegated"
+        }
+      ]
+    }
+  }
+}

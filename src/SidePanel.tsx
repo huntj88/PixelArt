@@ -3,10 +3,22 @@
  * Licensed under the MIT License.
  */
 
+import * as microsoftTeams from "@microsoft/teams-js";
+
 const SidePanel = () => {
   return (
     <div>
-      <h1>hello</h1>
+      <button
+        onClick={() => {
+          microsoftTeams.meeting.shareAppContentToStage((error) => {
+            if (error) {
+              console.error(error);
+            }
+          }, `${window.location.origin}/?inTeams=true`);
+        }}
+      >
+        Sup
+      </button>
     </div>
   );
 };

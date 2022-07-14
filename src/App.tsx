@@ -40,9 +40,9 @@ export default function App() {
   return (
     <Router>
       <Routes>
+        <Route path={"/"} element={<MeetingStage />} />
         <Route path={"/sidepanel"} element={<SidePanel />} />
         <Route path={"/config"} element={<TabConfig />} />
-        <Route path={"/"} element={<MeetingStage />} />
       </Routes>
     </Router>
   );

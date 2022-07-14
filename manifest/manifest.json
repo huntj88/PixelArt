@@ -26,14 +26,14 @@
   "accentColor": "#ffffff",
   "configurableTabs": [
     {
-      "configurationUrl": "https://5e03-172-124-184-122.ngrok.io/config?inTeams=true",
+      "configurationUrl": "https://31ff-172-124-184-122.ngrok.io/config?inTeams=true",
       "canUpdateConfiguration": false,
       "scopes": ["groupchat"],
       "context": ["meetingSidePanel", "meetingStage"]
     }
   ],
   "validDomains": ["*.ngrok.io"],
-  "showLoadingIndicator": true,
+  "showLoadingIndicator": false,
   "authorization": {
     "permissions": {
       "orgWide": [],

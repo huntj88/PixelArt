@@ -32,6 +32,7 @@ function MeetingStage() {
   );
 
   const pixelMapRef = useRef<SharedMap>();
+  const joinedRef = useRef<boolean>(false);
 
   let selectedColor = "red";
 
@@ -40,7 +41,7 @@ function MeetingStage() {
     pixelMapRef.current?.set(`${x},${y}`, selectedColor);
   };
 
-  const updateBoardWithShared = () => {
+  const updateBoardWithShared = useCallback(() => {
     const mutableBoard = [...board];
 
     pixelMapRef.current?.forEach((value: string, key: string) => {
@@ -50,9 +51,15 @@ function MeetingStage() {
     });
 
     setBoard(mutableBoard);
-  };
+  }, [board, setBoard]);
 
   useEffect(() => {
+    if (joinedRef.current) {
+      return;
+    }
+
+    joinedRef.current = true;
+
     const schema: ContainerSchema = {
       initialObjects: { pixelMap: SharedMap },
     };
@@ -90,7 +97,7 @@ function MeetingStage() {
         pixelMap.on("valueChanged", updateBoardWithShared);
       })
       .catch((err) => console.log(err));
-  }, []);
+  });
 
   return (
     <div className="App">

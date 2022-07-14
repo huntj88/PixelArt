@@ -32,9 +32,9 @@ function MeetingStage() {
   );
 
   const pixelMapRef = useRef<SharedMap>();
-  const joinedRef = useRef<boolean>(false);
+  const initRef = useRef<boolean>(false);
 
-  let selectedColor = "red";
+  const [selectedColor, setSelectedColor] = useState<string>("red");
 
   const setPixelColor = (x: number, y: number) => {
     console.log("selected color");
@@ -54,11 +54,11 @@ function MeetingStage() {
   }, [board, setBoard]);
 
   useEffect(() => {
-    if (joinedRef.current) {
+    if (initRef.current) {
       return;
     }
 
-    joinedRef.current = true;
+    initRef.current = true;
 
     const schema: ContainerSchema = {
       initialObjects: { pixelMap: SharedMap },
@@ -109,7 +109,7 @@ function MeetingStage() {
             yIndex={0}
             pixelColor={color}
             setPixelColor={() => {
-              selectedColor = color;
+              setSelectedColor(color);
             }}
           />
         );

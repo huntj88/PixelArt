@@ -87,9 +87,7 @@ export const usePresence = (presence?: EphemeralPresence) => {
           // Update our local state
           const updatedUsers = presence
             .toArray()
-            .filter(
-              (user) => user.state === PresenceState.online && local === false
-            );
+            .filter((user) => user.state === PresenceState.online);
 
           if (updatedUsers) {
             setUsers(updatedUsers);

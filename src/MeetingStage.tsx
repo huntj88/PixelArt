@@ -20,7 +20,7 @@ function MeetingStage() {
   ];
 
   const { presence, pixelMap, container, error } = useSharedObjects();
-  const { pixelBoard, setPixelColor } = usePixelMap(pixelMap);
+  const { pixelMapState, setPixelColor } = usePixelMap(pixelMap);
   const { presenceStarted, localUser, users, changePosition, changeColor } =
     usePresence(presence);
 
@@ -42,11 +42,14 @@ function MeetingStage() {
       <br />
       {possibleColors.map((color) => {
         return (
-          <GridPixel
-            xIndex={0}
-            yIndex={0}
-            pixelColor={color}
-            pixelSelected={() => {
+          <div
+            style={{
+              height: 70,
+              width: 70,
+              backgroundColor: color,
+              float: "left",
+            }}
+            onClick={() => {
               changeColor(color);
             }}
           />
@@ -59,17 +62,24 @@ function MeetingStage() {
       <br />
       <br />
 
-      {pixelBoard.map((column, index) => {
+      {[...range(0, 40)].map((x) => {
         return (
           <GridColumn
-            xIndex={index}
-            columnData={column}
+            pixelMapState={pixelMapState}
+            xIndex={x}
             pixelSelected={setPixelColorFromSelected}
+            users={users}
+            onMouseOverPixel={(x: number, y: number) => {
+              changePosition(x, y);
+            }}
           />
         );
       })}
     </div>
   );
 }
+
+const range = (start: number, end: number, length = end - start) =>
+  Array.from({ length }, (_, i) => start + i);
 
 export default MeetingStage;

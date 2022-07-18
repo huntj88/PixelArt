@@ -5,14 +5,8 @@ const range = (start: number, end: number, length = end - start) =>
   Array.from({ length }, (_, i) => start + i);
 
 export const usePixelMap = (pixelMap?: SharedMap) => {
-  // // x pos is index of outer array, y pos is index of an inner array
-  const [pixelBoard, setPixelBoard] = useState<string[][]>(
-    [...range(0, 40)].map(() => {
-      return [...range(0, 25)].map(() => "white");
-    })
-  );
-
   const [pixelMapStarted, setStarted] = useState(false);
+  const [pixelMapState, setPixelMapState] = useState(new Map<string, string>());
 
   const setPixelColor = useCallback(
     (x: number, y: number, color: string) => {
@@ -22,16 +16,17 @@ export const usePixelMap = (pixelMap?: SharedMap) => {
   );
 
   const refreshPixels = useCallback(() => {
-    const mutableBoard = [...pixelBoard];
+    console.log("refresh pixels");
 
-    pixelMap?.forEach((value: string, key: string) => {
-      const x = Number.parseInt(key.split(",")[0]);
-      const y = Number.parseInt(key.split(",")[1]);
-      mutableBoard[x][y] = value;
+    const map = new Map<string, string>();
+
+    pixelMap?.forEach((value, key) => {
+      map.set(key, value);
     });
 
-    setPixelBoard(mutableBoard);
-  }, [pixelMap, pixelBoard, setPixelBoard]);
+    // tigger a render. same instance
+    setPixelMapState(map);
+  }, [pixelMap, setPixelMapState]);
 
   useEffect(() => {
     if (pixelMap && !pixelMapStarted) {
@@ -39,10 +34,10 @@ export const usePixelMap = (pixelMap?: SharedMap) => {
       pixelMap?.on("valueChanged", refreshPixels);
       refreshPixels();
     }
-  }, [pixelMap, pixelMapStarted, setPixelBoard, setStarted, refreshPixels]);
+  }, [pixelMap, pixelMapStarted, setStarted, refreshPixels]);
 
   return {
-    pixelBoard,
+    pixelMapState,
     setPixelColor,
   };
 };

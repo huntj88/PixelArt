@@ -7,8 +7,8 @@ const range = (start: number, end: number, length = end - start) =>
 export const usePixelMap = (pixelMap?: SharedMap) => {
   // // x pos is index of outer array, y pos is index of an inner array
   const [pixelBoard, setPixelBoard] = useState<string[][]>(
-    [...range(0, 20)].map(() => {
-      return [...range(0, 15)].map(() => "white");
+    [...range(0, 40)].map(() => {
+      return [...range(0, 25)].map(() => "white");
     })
   );
 

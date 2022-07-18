@@ -1,12 +1,7 @@
 import { useEffect, useState } from "react";
-import {
-  EphemeralPresence,
-  EphemeralState,
-  TeamsFluidClient,
-} from "@microsoft/live-share";
+import { EphemeralPresence, TeamsFluidClient } from "@microsoft/live-share";
 import { LOCAL_MODE_TENANT_ID } from "@fluidframework/azure-client";
 import { InsecureTokenProvider } from "@fluidframework/test-client-utils";
-import { EphemeralTimer } from "@microsoft/live-share";
 import { IFluidContainer, SharedMap } from "fluid-framework";
 import { inTeams } from "../inTeams";
 
@@ -72,8 +67,8 @@ export function useSharedObjects() {
 
   const initialObjects = container?.initialObjects;
   return {
-    presence: initialObjects?.presence,
-    pixelMap: initialObjects?.pixelMap,
+    presence: initialObjects?.presence as EphemeralPresence | undefined,
+    pixelMap: initialObjects?.pixelMap as SharedMap | undefined,
     container,
     error,
   };

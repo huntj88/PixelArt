@@ -2,7 +2,7 @@ import GridPixel from "./GridPixel";
 
 const GridColumn = ({ xIndex, columnData, pixelSelected }) => {
   return (
-    <div style={{ width: 50, float: "left" }}>
+    <div style={{ width: 27, float: "left" }}>
       {columnData.map((pixelColor, yIndex) => {
         return (
           <GridPixel

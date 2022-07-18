@@ -2,9 +2,9 @@ import "./App.css";
 import GridColumn from "./GridColumn";
 import GridPixel from "./GridPixel";
 import { useState, useCallback } from "react";
-import { SharedMap } from "fluid-framework";
 import { useSharedObjects } from "./live-share-hooks/useSharedData";
 import { usePixelMap } from "./live-share-hooks/usePixelMap";
+import { PresenceData, usePresence } from "./usePresence";
 
 function MeetingStage() {
   const possibleColors = [
@@ -20,20 +20,21 @@ function MeetingStage() {
   ];
 
   const { presence, pixelMap, container, error } = useSharedObjects();
-
-  // SharedMap hook for user stories
-  const { pixelBoard, setPixelColor } = usePixelMap(
-    pixelMap as SharedMap // todo: do i need the cast?
-  );
-
-  const [selectedColor, setSelectedColor] = useState<string>("red");
+  const { pixelBoard, setPixelColor } = usePixelMap(pixelMap);
+  const { presenceStarted, localUser, users, changePosition, changeColor } =
+    usePresence(presence);
 
   const setPixelColorFromSelected = useCallback(
     (x: number, y: number) => {
       console.log("selected color");
-      setPixelColor(x, y, selectedColor);
+      if (localUser?.data) {
+        const presenceData = localUser.data as PresenceData;
+        if (presenceData?.selectedColor) {
+          setPixelColor(x, y, presenceData.selectedColor);
+        }
+      }
     },
-    [selectedColor, setPixelColor]
+    [localUser, setPixelColor]
   );
 
   return (
@@ -46,7 +47,7 @@ function MeetingStage() {
             yIndex={0}
             pixelColor={color}
             pixelSelected={() => {
-              setSelectedColor(color);
+              changeColor(color);
             }}
           />
         );

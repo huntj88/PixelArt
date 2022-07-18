@@ -28,7 +28,7 @@ function MeetingStage() {
 
   const [selectedColor, setSelectedColor] = useState<string>("red");
 
-  const setPixelColorBlah = useCallback(
+  const setPixelColorFromSelected = useCallback(
     (x: number, y: number) => {
       console.log("selected color");
       setPixelColor(x, y, selectedColor);
@@ -45,7 +45,7 @@ function MeetingStage() {
             xIndex={0}
             yIndex={0}
             pixelColor={color}
-            setPixelColor={() => {
+            pixelSelected={() => {
               setSelectedColor(color);
             }}
           />
@@ -63,7 +63,7 @@ function MeetingStage() {
           <GridColumn
             xIndex={index}
             columnData={column}
-            setPixelColor={setPixelColorBlah}
+            pixelSelected={setPixelColorFromSelected}
           />
         );
       })}

@@ -1,6 +1,6 @@
 import GridPixel from "./GridPixel";
 
-const GridColumn = ({ xIndex, columnData, setPixelColor }) => {
+const GridColumn = ({ xIndex, columnData, pixelSelected }) => {
   return (
     <div style={{ width: 50, float: "left" }}>
       {columnData.map((pixelColor, yIndex) => {
@@ -9,7 +9,7 @@ const GridColumn = ({ xIndex, columnData, setPixelColor }) => {
             xIndex={xIndex}
             yIndex={yIndex}
             pixelColor={pixelColor}
-            setPixelColor={setPixelColor}
+            pixelSelected={pixelSelected}
           />
         );
       })}

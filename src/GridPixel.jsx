@@ -1,4 +1,4 @@
-const GridPixel = ({ xIndex, yIndex, pixelColor, setPixelColor }) => {
+const GridPixel = ({ xIndex, yIndex, pixelColor, pixelSelected }) => {
   const styles = {
     border: "1px solid rgba(0, 0, 0, 0.05)",
     height: 50,
@@ -6,7 +6,7 @@ const GridPixel = ({ xIndex, yIndex, pixelColor, setPixelColor }) => {
     backgroundColor: pixelColor,
     float: "left",
   };
-  return <div style={styles} onClick={() => setPixelColor(xIndex, yIndex)} />;
+  return <div style={styles} onClick={() => pixelSelected(xIndex, yIndex)} />;
 };
 
 export default GridPixel;

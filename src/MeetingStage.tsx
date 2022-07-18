@@ -21,7 +21,7 @@ function MeetingStage() {
 
   const { presence, pixelMap, container, error } = useSharedObjects();
   const { pixelMapState, setPixelColor } = usePixelMap(pixelMap);
-  const { presenceStarted, localUser, users, changePosition, changeColor } =
+  const { presenceStarted, localUser, allUsers, changePosition, changeColor } =
     usePresence(presence);
 
   const setPixelColorFromSelected = useCallback(
@@ -36,6 +36,13 @@ function MeetingStage() {
     },
     [localUser, setPixelColor]
   );
+
+  const otherUsers = allUsers.filter(
+    (user) => user.userId !== localUser?.userId
+  );
+
+  const localUserData = localUser?.data as PresenceData;
+  const localUserSelectedColor = localUserData?.selectedColor ?? "white";
 
   return (
     <div className="App">
@@ -67,8 +74,9 @@ function MeetingStage() {
           <GridColumn
             pixelMapState={pixelMapState}
             xIndex={x}
-            pixelSelected={setPixelColorFromSelected}
-            users={users}
+            onPixelSelected={setPixelColorFromSelected}
+            otherUsers={otherUsers}
+            selectedColor={localUserSelectedColor}
             onMouseOverPixel={(x: number, y: number) => {
               changePosition(x, y);
             }}

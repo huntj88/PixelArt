@@ -3,8 +3,9 @@ import GridPixel from "./GridPixel";
 const GridColumn = ({
   pixelMapState,
   xIndex,
-  pixelSelected,
-  users,
+  onPixelSelected,
+  otherUsers,
+  selectedColor,
   onMouseOverPixel,
 }) => {
   return (
@@ -15,8 +16,9 @@ const GridColumn = ({
             pixelMapState={pixelMapState}
             xIndex={xIndex}
             yIndex={yIndex}
-            pixelSelected={pixelSelected}
-            users={users}
+            onPixelSelected={onPixelSelected}
+            otherUsers={otherUsers}
+            selectedColor={selectedColor}
             onMouseOverPixel={onMouseOverPixel}
           />
         );

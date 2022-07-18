@@ -1,9 +1,12 @@
+import { useState } from "react";
+
 const GridPixel = ({
   pixelMapState,
   xIndex,
   yIndex,
-  pixelSelected,
-  users,
+  onPixelSelected,
+  otherUsers,
+  selectedColor,
   onMouseOverPixel,
 }) => {
   let bgColor = "white";
@@ -11,26 +14,34 @@ const GridPixel = ({
     bgColor = pixelMapState.get(`${xIndex},${yIndex}`);
   }
 
-  users.forEach((user) => {
+  otherUsers.forEach((user) => {
     if (user.data.xIndex && user.data.yIndex) {
       if (user.data.xIndex === xIndex && user.data.yIndex === yIndex) {
-        bgColor = "green";
+        bgColor = user.data.selectedColor;
       }
     }
   });
+
+  const [mouseOverColor, setMouseOverColor] = useState(undefined);
 
   const styles = {
     border: "1px solid rgba(0, 0, 0, 0.05)",
     height: 25,
     width: 25,
-    backgroundColor: bgColor,
+    backgroundColor: mouseOverColor ?? bgColor,
     float: "left",
   };
   return (
     <div
       style={styles}
-      onClick={() => pixelSelected(xIndex, yIndex)}
-      onMouseOver={() => onMouseOverPixel(xIndex, yIndex)}
+      onClick={() => onPixelSelected(xIndex, yIndex)}
+      onMouseOver={() => {
+        setMouseOverColor(selectedColor);
+        onMouseOverPixel(xIndex, yIndex);
+      }}
+      onMouseOut={() => {
+        setMouseOverColor(undefined);
+      }}
     />
   );
 };

@@ -20,7 +20,7 @@ export interface PresenceData {
 }
 
 export const usePresence = (presence?: EphemeralPresence) => {
-  const [users, setUsers] = useState<EphemeralPresenceUser[]>([]);
+  const [allUsers, setOtherUsers] = useState<EphemeralPresenceUser[]>([]);
   const [localUser, setLocalUser] = useState<EphemeralPresenceUser | undefined>(
     undefined
   );
@@ -68,7 +68,6 @@ export const usePresence = (presence?: EphemeralPresence) => {
       presence.on(
         "presenceChanged",
         (userPresence: EphemeralPresenceUser, local: boolean) => {
-          console.log(userPresence);
           if (local) {
             // Get the roles of the local user
             userPresence
@@ -89,8 +88,9 @@ export const usePresence = (presence?: EphemeralPresence) => {
             .toArray()
             .filter((user) => user.state === PresenceState.online);
 
+          console.log(updatedUsers);
           if (updatedUsers) {
-            setUsers(updatedUsers);
+            setOtherUsers(updatedUsers);
           }
         }
       );
@@ -114,7 +114,7 @@ export const usePresence = (presence?: EphemeralPresence) => {
   return {
     presenceStarted,
     localUser,
-    users,
+    allUsers,
     changePosition,
     changeColor,
   };

@@ -1,9 +1,9 @@
 import * as microsoftTeams from "@microsoft/teams-js";
 import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import MeetingStage from "./MeetingStage";
-import SidePanel from "./SidePanel";
-import TabConfig from "./TabConfig";
+import MeetingStage from "./components/MeetingStage";
+import SidePanel from "./components/SidePanel";
+import TabConfig from "./components/TabConfig";
 import { inTeams } from "./inTeams";
 
 export default function App() {

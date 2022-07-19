@@ -28,7 +28,6 @@ function MeetingStage() {
 
   const setPixelColorFromSelected = useCallback(
     (x: number, y: number) => {
-      console.log("selected color");
       if (localUser?.data) {
         const presenceData = localUser.data as PresenceData;
         if (presenceData?.selectedColor) {

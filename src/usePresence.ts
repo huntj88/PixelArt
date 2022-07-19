@@ -29,7 +29,7 @@ export const usePresence = (presence?: EphemeralPresence) => {
   // Post initial user presence with name as additional data
   const updatePresence = useCallback(
     (data: PresenceData) => {
-      console.log("changing presence: " + data);
+      // console.log("changing presence: " + data);
 
       const localUserData = localUser?.data as PresenceData | undefined;
 

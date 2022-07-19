@@ -11,7 +11,6 @@ const GridPixel = ({
   selectedColor,
   onMouseOverPixel,
 }) => {
-  console.log(`rendering pixel: ${xIndex},${yIndex}`);
   const [color, setColor] = useState("white");
   stateMap.set(`${xIndex},${yIndex}`, [color, setColor]);
 

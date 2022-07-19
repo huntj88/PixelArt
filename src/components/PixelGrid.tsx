@@ -4,7 +4,7 @@ import Pixel from "./Pixel";
 import { PresenceData } from "../usePresence";
 
 export interface IPixelGridProps {
-  stateMap: Map<string, [string, Dispatch<SetStateAction<string>>]>;
+  pixelStateMap: Map<string, [string, Dispatch<SetStateAction<string>>]>;
   setPixelColor: (x: number, y: number, color: string) => void;
   changePresencePosition: (x: number, y: number) => void;
   otherUsers: EphemeralPresenceUser[];
@@ -12,7 +12,7 @@ export interface IPixelGridProps {
 }
 
 export const PixelGrid: FC<IPixelGridProps> = ({
-  stateMap,
+  pixelStateMap,
   setPixelColor,
   changePresencePosition,
   otherUsers,
@@ -27,7 +27,7 @@ export const PixelGrid: FC<IPixelGridProps> = ({
               return (
                 <div key={`${xIndex},${yIndex}`}>
                   <Pixel
-                    stateMap={stateMap}
+                    pixelStateMap={pixelStateMap}
                     xIndex={xIndex}
                     yIndex={yIndex}
                     onPixelSelected={setPixelColor}

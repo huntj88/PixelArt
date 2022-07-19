@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const Pixel = ({
-  stateMap,
+  pixelStateMap,
   xIndex,
   yIndex,
   onPixelSelected,
@@ -10,7 +10,7 @@ const Pixel = ({
   onMouseOverPixel,
 }) => {
   const [color, setColor] = useState("white");
-  stateMap.set(`${xIndex},${yIndex}`, [color, setColor]);
+  pixelStateMap.set(`${xIndex},${yIndex}`, [color, setColor]);
 
   let otherUserColor = undefined;
   otherUsers.forEach((user) => {

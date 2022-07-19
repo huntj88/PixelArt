@@ -6,11 +6,17 @@ import { usePresence } from "../usePresence";
 import { PixelGrid } from "./PixelGrid";
 import { ColorPicker } from "./ColorPicker";
 
-const stateMap = new Map<string, [string, Dispatch<SetStateAction<string>>]>();
+const pixelStateMap = new Map<
+  string,
+  [string, Dispatch<SetStateAction<string>>]
+>();
 
 function MeetingStage() {
   const { presence, pixelMap, container, error } = useSharedObjects();
-  const { pixelMapStarted, setPixelColor } = usePixelMap(stateMap, pixelMap);
+  const { pixelMapStarted, setPixelColor } = usePixelMap(
+    pixelStateMap,
+    pixelMap
+  );
 
   const {
     presenceStarted,
@@ -43,7 +49,7 @@ function MeetingStage() {
 
       {presenceStarted && pixelMapStarted && (
         <PixelGrid
-          stateMap={stateMap}
+          pixelStateMap={pixelStateMap}
           setPixelColor={(x: number, y: number) => {
             setPixelColor(x, y, selectedColor);
           }}

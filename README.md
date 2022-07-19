@@ -1,4 +1,6 @@
-# Getting Started with Create React App
+# Collaborative Pixel art editor using [live-share-sdk](https://github.com/microsoft/live-share-sdk)
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

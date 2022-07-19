@@ -50,6 +50,7 @@ function MeetingStage() {
       {possibleColors.map((color) => {
         return (
           <div
+            key={color}
             style={{
               height: 70,
               width: 70,
@@ -69,18 +70,20 @@ function MeetingStage() {
       <br />
       <br />
 
-      {[...range(0, 40)].map((x) => {
+      {[...range(0, 40)].map((xIndex) => {
         return (
-          <GridColumn
-            pixelMapState={pixelMapState}
-            xIndex={x}
-            onPixelSelected={setPixelColorFromSelected}
-            otherUsers={otherUsers}
-            selectedColor={localUserSelectedColor}
-            onMouseOverPixel={(x: number, y: number) => {
-              changePosition(x, y);
-            }}
-          />
+          <div key={`${xIndex}`}>
+            <GridColumn
+              pixelMapState={pixelMapState}
+              xIndex={xIndex}
+              onPixelSelected={setPixelColorFromSelected}
+              otherUsers={otherUsers}
+              selectedColor={localUserSelectedColor}
+              onMouseOverPixel={(x: number, y: number) => {
+                changePosition(x, y);
+              }}
+            />
+          </div>
         );
       })}
     </div>

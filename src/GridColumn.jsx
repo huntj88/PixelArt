@@ -12,15 +12,17 @@ const GridColumn = ({
     <div style={{ width: 27, float: "left" }}>
       {[...range(0, 25)].map((yIndex) => {
         return (
-          <GridPixel
-            pixelMapState={pixelMapState}
-            xIndex={xIndex}
-            yIndex={yIndex}
-            onPixelSelected={onPixelSelected}
-            otherUsers={otherUsers}
-            selectedColor={selectedColor}
-            onMouseOverPixel={onMouseOverPixel}
-          />
+          <div key={`${xIndex},${yIndex}`}>
+            <GridPixel
+              pixelMapState={pixelMapState}
+              xIndex={xIndex}
+              yIndex={yIndex}
+              onPixelSelected={onPixelSelected}
+              otherUsers={otherUsers}
+              selectedColor={selectedColor}
+              onMouseOverPixel={onMouseOverPixel}
+            />
+          </div>
         );
       })}
     </div>

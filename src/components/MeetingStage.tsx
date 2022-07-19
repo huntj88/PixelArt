@@ -2,7 +2,7 @@ import "../App.css";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useSharedObjects } from "../live-share-hooks/useSharedData";
 import { usePixelMap } from "../live-share-hooks/usePixelMap";
-import { usePresence } from "../usePresence";
+import { usePresence } from "../live-share-hooks/usePresence";
 import { PixelGrid } from "./PixelGrid";
 import { ColorPicker } from "./ColorPicker";
 

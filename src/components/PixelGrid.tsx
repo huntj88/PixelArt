@@ -1,7 +1,7 @@
 import { EphemeralPresenceUser } from "@microsoft/live-share";
 import { Dispatch, FC, SetStateAction, useCallback } from "react";
 import Pixel from "./Pixel";
-import { PresenceData } from "../usePresence";
+import { PresenceData } from "../live-share-hooks/usePresence";
 
 export interface IPixelGridProps {
   pixelStateMap: Map<string, [string, Dispatch<SetStateAction<string>>]>;

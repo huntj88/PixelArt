@@ -1,7 +1,9 @@
 import { useState } from "react";
 
 const GridPixel = ({
-  pixelMapState,
+  // pixelMapState,
+  // colorState,
+  stateMap,
   xIndex,
   yIndex,
   onPixelSelected,
@@ -9,15 +11,15 @@ const GridPixel = ({
   selectedColor,
   onMouseOverPixel,
 }) => {
-  let bgColor = "white";
-  if (pixelMapState) {
-    bgColor = pixelMapState.get(`${xIndex},${yIndex}`);
-  }
+  console.log(`rendering pixel: ${xIndex},${yIndex}`);
+  const [color, setColor] = useState("white");
+  stateMap.set(`${xIndex},${yIndex}`, [color, setColor]);
 
+  let otherUserColor = undefined;
   otherUsers.forEach((user) => {
     if (user.data.xIndex && user.data.yIndex) {
       if (user.data.xIndex === xIndex && user.data.yIndex === yIndex) {
-        bgColor = user.data.selectedColor;
+        otherUserColor = user.data.selectedColor;
       }
     }
   });
@@ -28,7 +30,7 @@ const GridPixel = ({
     border: "1px solid rgba(0, 0, 0, 0.05)",
     height: 25,
     width: 25,
-    backgroundColor: mouseOverColor ?? bgColor,
+    backgroundColor: mouseOverColor ?? otherUserColor ?? color,
     float: "left",
   };
   return (

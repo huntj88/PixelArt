@@ -1,12 +1,34 @@
-import { useEffect, useState, useCallback, useRef, useMemo } from "react";
+import {
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  useMemo,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { SharedMap } from "fluid-framework";
 
 const range = (start: number, end: number, length = end - start) =>
   Array.from({ length }, (_, i) => start + i);
 
-export const usePixelMap = (pixelMap?: SharedMap) => {
+export const usePixelMap = (
+  stateMap: Map<string, [string, Dispatch<SetStateAction<string>>]>,
+  pixelMap?: SharedMap
+) => {
+  // const map = new Map<string, [string, Dispatch<SetStateAction<string>>]>();
+
+  // const initState = () => {
+  //   [...range(0, 40)].forEach((x) => {
+  //     [...range(0, 25)].forEach((y) => {
+  //       map.current.set(`${x},${y}`, useState("white"));
+  //     });
+  //   });
+  // };
+
   const [pixelMapStarted, setStarted] = useState(false);
-  const [pixelMapState, setPixelMapState] = useState(new Map<string, string>());
+
+  // const [pixelMapState, setPixelMapState] = useState(new Map<string, string>());
 
   const setPixelColor = useCallback(
     (x: number, y: number, color: string) => {
@@ -18,15 +40,18 @@ export const usePixelMap = (pixelMap?: SharedMap) => {
   const refreshPixels = useCallback(() => {
     console.log("refresh pixels");
 
-    const map = new Map<string, string>();
+    // const map = new Map<string, string>();
 
     pixelMap?.forEach((value, key) => {
-      map.set(key, value);
+      if (stateMap.get(key)?.[0] != value) {
+        console.log(stateMap.get(key));
+        stateMap.get(key)?.[1](value);
+      }
     });
 
     // tigger a render. same instance
-    setPixelMapState(map);
-  }, [pixelMap, setPixelMapState]);
+    // setPixelMapState(map);
+  }, [pixelMap]);
 
   useEffect(() => {
     if (pixelMap && !pixelMapStarted) {
@@ -37,7 +62,6 @@ export const usePixelMap = (pixelMap?: SharedMap) => {
   }, [pixelMap, pixelMapStarted, setStarted, refreshPixels]);
 
   return {
-    pixelMapState,
     setPixelColor,
   };
 };

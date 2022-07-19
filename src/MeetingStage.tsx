@@ -23,7 +23,7 @@ function MeetingStage() {
   const { presence, pixelMap, container, error } = useSharedObjects();
   const { setPixelColor } = usePixelMap(stateMap, pixelMap);
 
-  const { presenceStarted, localUser, allUsers, changePosition, changeColor } =
+  const { localUser, allUsers, changePosition, changeColor } =
     usePresence(presence);
 
   const setPixelColorFromSelected = useCallback(

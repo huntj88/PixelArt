@@ -1,8 +1,6 @@
 import { useState } from "react";
 
 const GridPixel = ({
-  // pixelMapState,
-  // colorState,
   stateMap,
   xIndex,
   yIndex,

@@ -112,7 +112,6 @@ export const usePresence = (presence?: EphemeralPresence) => {
   }, [presence, setPresenceStarted, setLocalUser]);
 
   return {
-    presenceStarted,
     localUser,
     allUsers,
     changePosition,

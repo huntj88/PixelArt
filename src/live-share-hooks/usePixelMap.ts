@@ -22,7 +22,7 @@ export const usePixelMap = (
 
   const refreshPixels = useCallback(() => {
     console.log("refresh pixels");
-
+    console.log("refresh pixels");
     pixelSharedMap?.forEach((sharedColor, key) => {
       const existingColor = pixelStateMap.get(key)?.[0];
       if (existingColor !== sharedColor) {

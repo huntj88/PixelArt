@@ -1,20 +1,19 @@
 import "../App.css";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useMemo, useRef, useState } from "react";
 import { useSharedObjects } from "../live-share-hooks/useSharedData";
 import { usePixelMap } from "../live-share-hooks/usePixelMap";
 import { usePresence } from "../live-share-hooks/usePresence";
 import { PixelGrid } from "./PixelGrid";
 import { ColorPicker } from "./ColorPicker";
 
-const pixelStateMap = new Map<
-  string,
-  [string, Dispatch<SetStateAction<string>>]
->();
-
 function MeetingStage() {
+  const pixelStateMapRef = useRef(
+    new Map<string, [string, Dispatch<SetStateAction<string>>]>()
+  );
+
   const { presence, pixelMap, container, error } = useSharedObjects();
   const { pixelMapStarted, setPixelColor } = usePixelMap(
-    pixelStateMap,
+    pixelStateMapRef.current,
     pixelMap
   );
 
@@ -49,7 +48,7 @@ function MeetingStage() {
 
       {presenceStarted && pixelMapStarted && (
         <PixelGrid
-          pixelStateMap={pixelStateMap}
+          pixelStateMap={pixelStateMapRef.current}
           setPixelColor={(x: number, y: number) => {
             setPixelColor(x, y, selectedColor);
           }}

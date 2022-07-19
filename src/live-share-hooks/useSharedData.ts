@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { EphemeralPresence, TeamsFluidClient } from "@microsoft/live-share";
 import { LOCAL_MODE_TENANT_ID } from "@fluidframework/azure-client";
 import { InsecureTokenProvider } from "@fluidframework/test-client-utils";
@@ -15,11 +15,17 @@ import { inTeams } from "../inTeams";
  * @returns Shared objects managed by the apps fluid container.
  */
 export function useSharedObjects() {
+  const initRef = useRef(false);
   const [container, setContainer] = useState<IFluidContainer>();
   const [error, setError] = useState();
 
   useEffect(() => {
     // Check if user is in Teams
+
+    if (initRef.current) {
+      return;
+    }
+    initRef.current = true;
 
     let connection;
     if (!inTeams()) {
@@ -59,6 +65,7 @@ export function useSharedObjects() {
 
     // Join Teams container
     const client = new TeamsFluidClient(clientProps);
+    console.log("joining container");
     client
       .joinContainer(schema, onFirstInitialize)
       .then((results) => setContainer(results.container))
@@ -66,7 +73,7 @@ export function useSharedObjects() {
         console.error(err);
         setError(err);
       });
-  }, []);
+  });
 
   const initialObjects = container?.initialObjects;
   return {

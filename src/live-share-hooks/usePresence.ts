@@ -12,9 +12,12 @@ export interface PresenceData {
   selectedColor?: string;
 }
 
-export const usePresence = (presence?: EphemeralPresence) => {
-  const [allUsers, setOtherUsers] = useState<EphemeralPresenceUser[]>([]);
-  const [localUser, setLocalUser] = useState<EphemeralPresenceUser | undefined>(
+type Presence = EphemeralPresence<PresenceData>;
+type PresenceUser = EphemeralPresenceUser<PresenceData>;
+
+export const usePresence = (presence?: Presence) => {
+  const [allUsers, setOtherUsers] = useState<PresenceUser[]>([]);
+  const [localUser, setLocalUser] = useState<PresenceUser | undefined>(
     undefined
   );
   const [presenceStarted, setPresenceStarted] = useState(false);
@@ -24,17 +27,25 @@ export const usePresence = (presence?: EphemeralPresence) => {
     (data: PresenceData) => {
       // console.log("changing presence: " + data);
 
-      const localUserData = localUser?.data as PresenceData | undefined;
+      if (!presence?.isStarted) {
+        return;
+      }
 
-      presence?.updatePresence(PresenceState.online, {
-        name: data.name !== undefined ? data.name : localUserData?.name,
-        xIndex: data.xIndex !== undefined ? data.xIndex : localUserData?.xIndex,
-        yIndex: data.yIndex !== undefined ? data.yIndex : localUserData?.yIndex,
-        selectedColor:
-          data.selectedColor !== undefined
-            ? data.selectedColor
-            : localUserData?.selectedColor,
-      });
+      if (localUser?.data) {
+        const localUserData = localUser.data as PresenceData;
+
+        presence?.updatePresence(PresenceState.online, {
+          name: data.name !== undefined ? data.name : localUserData?.name,
+          xIndex:
+            data.xIndex !== undefined ? data.xIndex : localUserData?.xIndex,
+          yIndex:
+            data.yIndex !== undefined ? data.yIndex : localUserData?.yIndex,
+          selectedColor:
+            data.selectedColor !== undefined
+              ? data.selectedColor
+              : localUserData?.selectedColor,
+        });
+      }
     },
     [presence, localUser]
   );
@@ -82,7 +93,7 @@ export const usePresence = (presence?: EphemeralPresence) => {
             xIndex: 0,
             yIndex: 0,
             selectedColor: "red",
-          } as PresenceData,
+          },
           PresenceState.online
         )
         .then(() => {

@@ -62,7 +62,10 @@ export function useSharedObjects() {
     client
       .joinContainer(schema, onFirstInitialize)
       .then((results) => setContainer(results.container))
-      .catch((err) => setError(err));
+      .catch((err) => {
+        console.error(err);
+        setError(err);
+      });
   }, []);
 
   const initialObjects = container?.initialObjects;

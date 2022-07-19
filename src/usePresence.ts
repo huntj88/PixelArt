@@ -1,11 +1,4 @@
-import {
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-  useRef,
-  MutableRefObject,
-} from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   EphemeralPresence,
   PresenceState,
@@ -46,14 +39,14 @@ export const usePresence = (presence?: EphemeralPresence) => {
     [presence, localUser]
   );
 
-  const changePosition = useCallback(
+  const changePresencePosition = useCallback(
     (x: number, y: number) => {
       updatePresence({ xIndex: x, yIndex: y });
     },
     [updatePresence]
   );
 
-  const changeColor = useCallback(
+  const changePresenceColor = useCallback(
     (color: string) => {
       console.log("changing color: " + color);
       updatePresence({ selectedColor: color });
@@ -69,26 +62,14 @@ export const usePresence = (presence?: EphemeralPresence) => {
         "presenceChanged",
         (userPresence: EphemeralPresenceUser, local: boolean) => {
           if (local) {
-            // Get the roles of the local user
-            userPresence
-              .getRoles()
-              .then((roles) => {
-                // Set local user state
-                setLocalUser(userPresence);
-              })
-              .catch((err) => {
-                console.error(err);
-                if (localUser) {
-                  setLocalUser(localUser);
-                }
-              });
+            setLocalUser(userPresence);
           }
+
           // Update our local state
           const updatedUsers = presence
             .toArray()
             .filter((user) => user.state === PresenceState.online);
 
-          console.log(updatedUsers);
           if (updatedUsers) {
             setOtherUsers(updatedUsers);
           }
@@ -97,24 +78,27 @@ export const usePresence = (presence?: EphemeralPresence) => {
       presence
         .start(
           undefined,
-          <PresenceData>{
+          {
             xIndex: 0,
             yIndex: 0,
             selectedColor: "red",
-          },
+          } as PresenceData,
           PresenceState.online
         )
         .then(() => {
           setPresenceStarted(true);
         })
-        .catch((error) => console.error(error));
+        .catch((error) => {
+          console.error(error);
+        });
     }
-  }, [presence, setPresenceStarted, setLocalUser]);
+  }, [presence, setPresenceStarted, localUser, setLocalUser]);
 
   return {
+    presenceStarted,
     localUser,
     allUsers,
-    changePosition,
-    changeColor,
+    changePresencePosition,
+    changePresenceColor,
   };
 };

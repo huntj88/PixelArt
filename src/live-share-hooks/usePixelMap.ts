@@ -7,9 +7,6 @@ import {
 } from "react";
 import { SharedMap } from "fluid-framework";
 
-const range = (start: number, end: number, length = end - start) =>
-  Array.from({ length }, (_, i) => start + i);
-
 export const usePixelMap = (
   pixelStateMap: Map<string, [string, Dispatch<SetStateAction<string>>]>,
   pixelSharedMap?: SharedMap
@@ -33,17 +30,18 @@ export const usePixelMap = (
         setColorState?.(sharedColor);
       }
     });
-  }, [pixelSharedMap]);
+  }, [pixelSharedMap, pixelStateMap]);
 
   useEffect(() => {
     if (pixelSharedMap && !pixelMapStarted) {
       setStarted(true);
-      pixelSharedMap?.on("valueChanged", refreshPixels);
+      pixelSharedMap.on("valueChanged", refreshPixels);
       refreshPixels();
     }
   }, [pixelSharedMap, pixelMapStarted, setStarted, refreshPixels]);
 
   return {
+    pixelMapStarted,
     setPixelColor,
   };
 };

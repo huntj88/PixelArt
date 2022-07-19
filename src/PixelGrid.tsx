@@ -3,7 +3,7 @@ import { Dispatch, FC, SetStateAction, useCallback } from "react";
 import GridPixel from "./GridPixel";
 import { PresenceData } from "./usePresence";
 
-export interface IColorPickerProps {
+export interface IPixelGridProps {
   stateMap: Map<string, [string, Dispatch<SetStateAction<string>>]>;
   setPixelColor: (x: number, y: number, color: string) => void;
   changePosition: (x: number, y: number) => void;
@@ -11,7 +11,7 @@ export interface IColorPickerProps {
   localUser?: EphemeralPresenceUser;
 }
 
-export const PixelGrid: FC<IColorPickerProps> = ({
+export const PixelGrid: FC<IPixelGridProps> = ({
   stateMap,
   setPixelColor,
   changePosition,

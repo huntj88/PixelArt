@@ -1,5 +1,4 @@
-import { EphemeralPresenceUser } from "@microsoft/live-share";
-import { Dispatch, SetStateAction, FC } from "react";
+import { FC } from "react";
 
 const possibleColors = [
   "red",

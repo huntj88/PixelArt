@@ -21,7 +21,6 @@ export const usePresence = (
   presence?: Presence
 ) => {
   const localUser = useRef<PresenceUser | undefined>(undefined);
-  const [presenceStarted, setPresenceStarted] = useState(false);
 
   // Post initial user presence with name as additional data
   const updatePresence = (data: PresenceData) => {
@@ -98,17 +97,13 @@ export const usePresence = (
           },
           PresenceState.online
         )
-        .then(() => {
-          setPresenceStarted(true);
-        })
         .catch((error) => {
           console.error(error);
         });
     }
-  }, [presence, setPresenceStarted]);
+  }, [presence]);
 
   return {
-    presenceStarted,
     changePresencePosition,
     changePresenceColor,
   };

@@ -20,8 +20,7 @@ export const usePixelMap = (
     pixelSharedMap?.forEach((sharedColor, keyXY) => {
       const existingColor = pixelStateMap.get(keyXY)?.color;
       if (existingColor !== sharedColor) {
-        const setColorState = pixelStateMap.get(keyXY)?.setColor;
-        setColorState?.(sharedColor);
+        pixelStateMap.get(keyXY)?.setColor?.(sharedColor);
       }
     });
   }, [pixelSharedMap, pixelStateMap]);

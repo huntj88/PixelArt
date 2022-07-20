@@ -12,7 +12,6 @@ export const PixelGrid: FC<IPixelGridProps> = ({
   pixelStateMap,
   onPixelSelected,
   changePresencePosition,
-  selectedColor,
 }) => {
   return (
     <div>
@@ -27,7 +26,6 @@ export const PixelGrid: FC<IPixelGridProps> = ({
                     xIndex={xIndex}
                     yIndex={yIndex}
                     onPixelSelected={onPixelSelected}
-                    selectedColor={selectedColor}
                     onMouseOverPixel={changePresencePosition}
                   />
                 </div>

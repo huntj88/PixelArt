@@ -16,11 +16,13 @@ export interface PresenceData {
 type Presence = EphemeralPresence<PresenceData>;
 type PresenceUser = EphemeralPresenceUser<PresenceData>;
 
+export const initialColor = "red";
+
 export const usePresence = (
   pixelStateMap: Map<string, IPixelColorState>,
   presence?: Presence
 ) => {
-  const localUser = useRef<PresenceUser | undefined>(undefined);
+  const localUserRef = useRef<PresenceUser | undefined>(undefined);
 
   // Post initial user presence with name as additional data
   const updatePresence = (data: PresenceData) => {
@@ -29,11 +31,11 @@ export const usePresence = (
     }
 
     presence?.updatePresence(PresenceState.online, {
-      name: data.name ?? localUser.current?.data?.name,
-      xIndex: data.xIndex ?? localUser.current?.data?.xIndex,
-      yIndex: data.yIndex ?? localUser.current?.data?.yIndex,
+      name: data.name ?? localUserRef.current?.data?.name,
+      xIndex: data.xIndex ?? localUserRef.current?.data?.xIndex,
+      yIndex: data.yIndex ?? localUserRef.current?.data?.yIndex,
       selectedColor:
-        data.selectedColor ?? localUser.current?.data?.selectedColor,
+        data.selectedColor ?? localUserRef.current?.data?.selectedColor,
     });
   };
 
@@ -53,33 +55,26 @@ export const usePresence = (
         "presenceChanged",
         (userPresence: EphemeralPresenceUser, local: boolean) => {
           if (local) {
-            localUser.current = userPresence;
+            localUserRef.current = userPresence;
           }
 
-          // Update our local state
-          const otherUsers = presence
+          const allUsers = presence
             .toArray()
-            .filter(
-              (user) =>
-                user.state === PresenceState.online &&
-                localUser.current?.userId !== user.userId
-            );
+            .filter((user) => user.state === PresenceState.online);
 
-          pixelStateMap.forEach((value, key) => {
-            if (value.otherUserMouseOverColor) {
-              value.setOtherUserMouseOverColor(undefined);
+          pixelStateMap.forEach((value, _) => {
+            if (value.mouseOverColor) {
+              value.setMouseOverColor(undefined);
             }
           });
 
-          otherUsers.forEach((user) => {
+          allUsers.forEach((user) => {
             if (user.data) {
               const pixelColorState = pixelStateMap.get(
                 `${user.data.xIndex},${user.data.yIndex}`
               );
 
-              pixelColorState?.setOtherUserMouseOverColor(
-                user.data.selectedColor
-              );
+              pixelColorState?.setMouseOverColor(user.data.selectedColor);
             }
           });
         }
@@ -90,7 +85,7 @@ export const usePresence = (
           {
             xIndex: 0,
             yIndex: 0,
-            selectedColor: "red",
+            selectedColor: initialColor,
           },
           PresenceState.online
         )
@@ -101,6 +96,7 @@ export const usePresence = (
   }, [presence]);
 
   return {
+    localUserRef,
     changePresencePosition,
     changePresenceColor,
   };

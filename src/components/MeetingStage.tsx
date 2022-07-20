@@ -1,8 +1,8 @@
 import "../App.css";
-import { Dispatch, SetStateAction, useMemo, useRef, useState } from "react";
+import { useRef } from "react";
 import { useSharedObjects } from "../live-share-hooks/useSharedData";
 import { usePixelMap } from "../live-share-hooks/usePixelMap";
-import { usePresence } from "../live-share-hooks/usePresence";
+import { initialColor, usePresence } from "../live-share-hooks/usePresence";
 import { PixelGrid } from "./PixelGrid";
 import { ColorPicker } from "./ColorPicker";
 import { IPixelColorState } from "./Pixel";
@@ -13,21 +13,12 @@ function MeetingStage() {
   const { presence, pixelMap } = useSharedObjects();
   const { setPixelColor } = usePixelMap(pixelStateMapRef.current, pixelMap);
 
-  const { changePresencePosition, changePresenceColor } = usePresence(
-    pixelStateMapRef.current,
-    presence
-  );
-
-  const [selectedColor, setSelectedColor] = useState("red");
+  const { localUserRef, changePresencePosition, changePresenceColor } =
+    usePresence(pixelStateMapRef.current, presence);
 
   return (
     <div className="App">
-      <ColorPicker
-        changeColor={(color: string) => {
-          setSelectedColor(color);
-          changePresenceColor(color);
-        }}
-      />
+      <ColorPicker changeColor={changePresenceColor} />
 
       <br />
       <br />
@@ -39,10 +30,11 @@ function MeetingStage() {
         <PixelGrid
           pixelStateMap={pixelStateMapRef.current}
           onPixelSelected={(x: number, y: number) => {
+            const selectedColor =
+              localUserRef.current?.data?.selectedColor ?? initialColor;
             setPixelColor(x, y, selectedColor);
           }}
           changePresencePosition={changePresencePosition}
-          selectedColor={selectedColor}
         />
       }
     </div>

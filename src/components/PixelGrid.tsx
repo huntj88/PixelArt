@@ -1,21 +1,17 @@
-import { EphemeralPresenceUser } from "@microsoft/live-share";
-import { Dispatch, FC, SetStateAction, useCallback } from "react";
-import Pixel from "./Pixel";
-import { PresenceData } from "../live-share-hooks/usePresence";
+import { FC } from "react";
+import Pixel, { IPixelColorState } from "./Pixel";
 
 export interface IPixelGridProps {
-  pixelStateMap: Map<string, [string, Dispatch<SetStateAction<string>>]>;
-  setPixelColor: (x: number, y: number, color: string) => void;
+  pixelStateMap: Map<string, IPixelColorState>;
+  onPixelSelected: (x: number, y: number) => void;
   changePresencePosition: (x: number, y: number) => void;
-  otherUsers: EphemeralPresenceUser[];
   selectedColor?: string;
 }
 
 export const PixelGrid: FC<IPixelGridProps> = ({
   pixelStateMap,
-  setPixelColor,
+  onPixelSelected,
   changePresencePosition,
-  otherUsers,
   selectedColor,
 }) => {
   return (
@@ -30,12 +26,9 @@ export const PixelGrid: FC<IPixelGridProps> = ({
                     pixelStateMap={pixelStateMap}
                     xIndex={xIndex}
                     yIndex={yIndex}
-                    onPixelSelected={setPixelColor}
-                    otherUsers={otherUsers}
+                    onPixelSelected={onPixelSelected}
                     selectedColor={selectedColor}
-                    onMouseOverPixel={(x: number, y: number) => {
-                      changePresencePosition(x, y);
-                    }}
+                    onMouseOverPixel={changePresencePosition}
                   />
                 </div>
               );

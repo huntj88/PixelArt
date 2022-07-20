@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   EphemeralPresence,
   PresenceState,
   EphemeralPresenceUser,
 } from "@microsoft/live-share";
+import { IPixelColorState } from "../components/Pixel";
 
 export interface PresenceData {
   name?: string;
@@ -15,55 +16,38 @@ export interface PresenceData {
 type Presence = EphemeralPresence<PresenceData>;
 type PresenceUser = EphemeralPresenceUser<PresenceData>;
 
-export const usePresence = (presence?: Presence) => {
-  const [allUsers, setOtherUsers] = useState<PresenceUser[]>([]);
-  const [localUser, setLocalUser] = useState<PresenceUser | undefined>(
-    undefined
-  );
+export const usePresence = (
+  pixelStateMap: Map<string, IPixelColorState>,
+  presence?: Presence
+) => {
+  const localUser = useRef<PresenceUser | undefined>(undefined);
   const [presenceStarted, setPresenceStarted] = useState(false);
 
   // Post initial user presence with name as additional data
-  const updatePresence = useCallback(
-    (data: PresenceData) => {
-      // console.log("changing presence: " + data);
+  const updatePresence = (data: PresenceData) => {
+    if (!presence?.isStarted) {
+      return;
+    }
 
-      if (!presence?.isStarted) {
-        return;
-      }
+    const blah = {
+      name: data.name ?? localUser.current?.data?.name,
+      xIndex: data.xIndex ?? localUser.current?.data?.xIndex,
+      yIndex: data.yIndex ?? localUser.current?.data?.yIndex,
+      selectedColor:
+        data.selectedColor ?? localUser.current?.data?.selectedColor,
+    };
 
-      if (localUser?.data) {
-        const localUserData = localUser.data as PresenceData;
+    presence?.updatePresence(PresenceState.online, blah);
+  };
 
-        presence?.updatePresence(PresenceState.online, {
-          name: data.name !== undefined ? data.name : localUserData?.name,
-          xIndex:
-            data.xIndex !== undefined ? data.xIndex : localUserData?.xIndex,
-          yIndex:
-            data.yIndex !== undefined ? data.yIndex : localUserData?.yIndex,
-          selectedColor:
-            data.selectedColor !== undefined
-              ? data.selectedColor
-              : localUserData?.selectedColor,
-        });
-      }
-    },
-    [presence, localUser]
-  );
+  const changePresencePosition = (x: number, y: number) => {
+    updatePresence({ xIndex: x, yIndex: y });
+  };
 
-  const changePresencePosition = useCallback(
-    (x: number, y: number) => {
-      updatePresence({ xIndex: x, yIndex: y });
-    },
-    [updatePresence]
-  );
-
-  const changePresenceColor = useCallback(
-    (color: string) => {
-      console.log("changing color: " + color);
-      updatePresence({ selectedColor: color });
-    },
-    [updatePresence]
-  );
+  const changePresenceColor = (color: string) => {
+    console.log("setting color" + color);
+    updatePresence({ selectedColor: color });
+  };
 
   // Effect which registers SharedPresence event listeners before joining space
   useEffect(() => {
@@ -73,17 +57,35 @@ export const usePresence = (presence?: Presence) => {
         "presenceChanged",
         (userPresence: EphemeralPresenceUser, local: boolean) => {
           if (local) {
-            setLocalUser(userPresence);
+            localUser.current = userPresence;
           }
 
           // Update our local state
-          const updatedUsers = presence
+          const otherUsers = presence
             .toArray()
-            .filter((user) => user.state === PresenceState.online);
+            .filter(
+              (user) =>
+                user.state === PresenceState.online &&
+                localUser.current?.userId !== user.userId
+            );
 
-          if (updatedUsers) {
-            setOtherUsers(updatedUsers);
-          }
+          pixelStateMap.forEach((value, key) => {
+            if (value.otherUserMouseOverColor) {
+              value.setOtherUserMouseOverColor(undefined);
+            }
+          });
+
+          otherUsers.forEach((user) => {
+            if (user.data) {
+              const pixelColorState = pixelStateMap.get(
+                `${user.data.xIndex},${user.data.yIndex}`
+              );
+
+              pixelColorState?.setOtherUserMouseOverColor(
+                user.data.selectedColor
+              );
+            }
+          });
         }
       );
       presence
@@ -103,12 +105,10 @@ export const usePresence = (presence?: Presence) => {
           console.error(error);
         });
     }
-  }, [presence, setPresenceStarted, localUser, setLocalUser]);
+  }, [presence, setPresenceStarted]);
 
   return {
     presenceStarted,
-    localUser,
-    allUsers,
     changePresencePosition,
     changePresenceColor,
   };

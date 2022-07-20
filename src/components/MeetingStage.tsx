@@ -5,31 +5,18 @@ import { usePixelMap } from "../live-share-hooks/usePixelMap";
 import { usePresence } from "../live-share-hooks/usePresence";
 import { PixelGrid } from "./PixelGrid";
 import { ColorPicker } from "./ColorPicker";
+import { IPixelColorState } from "./Pixel";
 
 function MeetingStage() {
-  const pixelStateMapRef = useRef(
-    new Map<string, [string, Dispatch<SetStateAction<string>>]>()
-  );
+  const pixelStateMapRef = useRef(new Map<string, IPixelColorState>());
 
-  const { presence, pixelMap, container, error } = useSharedObjects();
-  const { pixelMapStarted, setPixelColor } = usePixelMap(
-    pixelStateMapRef.current,
-    pixelMap
-  );
+  const { presence, pixelMap } = useSharedObjects();
+  const { setPixelColor } = usePixelMap(pixelStateMapRef.current, pixelMap);
 
-  const {
-    presenceStarted,
-    localUser,
-    allUsers,
-    changePresencePosition,
-    changePresenceColor,
-  } = usePresence(presence);
+  const { presenceStarted, changePresencePosition, changePresenceColor } =
+    usePresence(pixelStateMapRef.current, presence);
 
   const [selectedColor, setSelectedColor] = useState("red");
-
-  const otherUsers = allUsers.filter(
-    (user) => user.userId !== localUser?.userId
-  );
 
   return (
     <div className="App">
@@ -46,17 +33,16 @@ function MeetingStage() {
       <br />
       <br />
 
-      {presenceStarted && pixelMapStarted && (
+      {
         <PixelGrid
           pixelStateMap={pixelStateMapRef.current}
-          setPixelColor={(x: number, y: number) => {
+          onPixelSelected={(x: number, y: number) => {
             setPixelColor(x, y, selectedColor);
           }}
           changePresencePosition={changePresencePosition}
-          otherUsers={otherUsers}
           selectedColor={selectedColor}
         />
-      )}
+      }
     </div>
   );
 }

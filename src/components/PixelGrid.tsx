@@ -1,11 +1,10 @@
 import { FC } from "react";
-import Pixel, { IPixelColorState } from "./Pixel";
+import Pixel, { IPixelColorState, pixelBorderSize, pixelSize } from "./Pixel";
 
 export interface IPixelGridProps {
   pixelStateMap: Map<string, IPixelColorState>;
   onPixelSelected: (x: number, y: number) => void;
   changePresencePosition: (x: number, y: number) => void;
-  selectedColor?: string;
 }
 
 export const PixelGrid: FC<IPixelGridProps> = ({
@@ -17,7 +16,10 @@ export const PixelGrid: FC<IPixelGridProps> = ({
     <div>
       {[...range(0, 40)].map((xIndex) => {
         return (
-          <div key={`${xIndex}`} style={{ width: 27, float: "left" }}>
+          <div
+            key={`${xIndex}`}
+            style={{ width: pixelSize + pixelBorderSize * 2, float: "left" }}
+          >
             {[...range(0, 25)].map((yIndex) => {
               return (
                 <div key={`${xIndex},${yIndex}`}>

@@ -16,26 +16,23 @@ export interface PresenceData {
 type Presence = EphemeralPresence<PresenceData>;
 type PresenceUser = EphemeralPresenceUser<PresenceData>;
 
-export const initialColor = "red";
-
 export const usePresence = (
   pixelStateMap: Map<string, IPixelColorState>,
   presence?: Presence
 ) => {
   const localUserRef = useRef<PresenceUser | undefined>(undefined);
 
-  // Post initial user presence with name as additional data
   const updatePresence = (data: PresenceData) => {
     if (!presence?.isStarted) {
       return;
     }
 
+    const existingData = localUserRef.current?.data;
     presence?.updatePresence(PresenceState.online, {
-      name: data.name ?? localUserRef.current?.data?.name,
-      xIndex: data.xIndex ?? localUserRef.current?.data?.xIndex,
-      yIndex: data.yIndex ?? localUserRef.current?.data?.yIndex,
-      selectedColor:
-        data.selectedColor ?? localUserRef.current?.data?.selectedColor,
+      name: data.name ?? existingData?.name,
+      xIndex: data.xIndex ?? existingData?.xIndex,
+      yIndex: data.yIndex ?? existingData?.yIndex,
+      selectedColor: data.selectedColor ?? existingData?.selectedColor,
     });
   };
 
@@ -45,6 +42,29 @@ export const usePresence = (
 
   const changePresenceColor = (color: string) => {
     updatePresence({ selectedColor: color });
+  };
+
+  const getSelectedColor = () => {
+    return localUserRef.current?.data?.selectedColor ?? "red";
+  };
+
+  const setPresenceColorAndLocation = (users: PresenceUser[]) => {
+    // reset mouseOverColors
+    pixelStateMap.forEach((value, _) => {
+      if (value.mouseOverColor) {
+        value.setMouseOverColor(undefined);
+      }
+    });
+
+    users.forEach((user) => {
+      if (user.data) {
+        const pixelColorState = pixelStateMap.get(
+          `${user.data.xIndex},${user.data.yIndex}`
+        );
+
+        pixelColorState?.setMouseOverColor(user.data.selectedColor);
+      }
+    });
   };
 
   // Effect which registers SharedPresence event listeners before joining space
@@ -62,33 +82,16 @@ export const usePresence = (
             .toArray()
             .filter((user) => user.state === PresenceState.online);
 
-          pixelStateMap.forEach((value, _) => {
-            if (value.mouseOverColor) {
-              value.setMouseOverColor(undefined);
-            }
-          });
-
-          allUsers.forEach((user) => {
-            if (user.data) {
-              const pixelColorState = pixelStateMap.get(
-                `${user.data.xIndex},${user.data.yIndex}`
-              );
-
-              pixelColorState?.setMouseOverColor(user.data.selectedColor);
-            }
-          });
+          setPresenceColorAndLocation(allUsers);
         }
       );
+
+      const initData = {
+        selectedColor: getSelectedColor(),
+      };
+
       presence
-        .start(
-          undefined,
-          {
-            xIndex: 0,
-            yIndex: 0,
-            selectedColor: initialColor,
-          },
-          PresenceState.online
-        )
+        .start(undefined, initData, PresenceState.online)
         .catch((error) => {
           console.error(error);
         });
@@ -96,7 +99,7 @@ export const usePresence = (
   }, [presence]);
 
   return {
-    localUserRef,
+    getSelectedColor,
     changePresencePosition,
     changePresenceColor,
   };

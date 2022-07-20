@@ -1,5 +1,8 @@
 import { Dispatch, FC, SetStateAction, useState } from "react";
 
+export const pixelSize = 25;
+export const pixelBorderSize = 1;
+
 export interface IPixelProps {
   pixelStateMap: Map<string, IPixelColorState>;
   xIndex: number;
@@ -22,6 +25,7 @@ const Pixel: FC<IPixelProps> = ({
   onPixelSelected,
   onMouseOverPixel,
 }) => {
+  // console.log(`${xIndex},${yIndex}`);
   const [color, setColor] = useState("white");
   const [mouseOverColor, setMouseOverColor] = useState<string | undefined>(
     undefined
@@ -35,9 +39,9 @@ const Pixel: FC<IPixelProps> = ({
   });
 
   const styles = {
-    border: "1px solid rgba(0, 0, 0, 0.05)",
-    height: 25,
-    width: 25,
+    border: `${pixelBorderSize}px solid rgba(0, 0, 0, 0.05)`,
+    height: pixelSize,
+    width: pixelSize,
     backgroundColor: mouseOverColor ?? color,
     float: "left",
   } as React.CSSProperties;

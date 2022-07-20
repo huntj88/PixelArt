@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
   EphemeralPresence,
   PresenceState,
@@ -28,15 +28,13 @@ export const usePresence = (
       return;
     }
 
-    const blah = {
+    presence?.updatePresence(PresenceState.online, {
       name: data.name ?? localUser.current?.data?.name,
       xIndex: data.xIndex ?? localUser.current?.data?.xIndex,
       yIndex: data.yIndex ?? localUser.current?.data?.yIndex,
       selectedColor:
         data.selectedColor ?? localUser.current?.data?.selectedColor,
-    };
-
-    presence?.updatePresence(PresenceState.online, blah);
+    });
   };
 
   const changePresencePosition = (x: number, y: number) => {
@@ -44,7 +42,6 @@ export const usePresence = (
   };
 
   const changePresenceColor = (color: string) => {
-    console.log("setting color" + color);
     updatePresence({ selectedColor: color });
   };
 

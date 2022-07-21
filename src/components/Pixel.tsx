@@ -14,8 +14,8 @@ export interface IPixelProps {
 export interface IPixelColorState {
   color: string;
   setColor: Dispatch<SetStateAction<string>>;
-  mouseOverColor?: string;
-  setMouseOverColor: Dispatch<SetStateAction<string | undefined>>;
+  mouseOverColor: string | null;
+  setMouseOverColor: Dispatch<SetStateAction<string | null>>;
 }
 
 const Pixel: FC<IPixelProps> = ({
@@ -25,11 +25,9 @@ const Pixel: FC<IPixelProps> = ({
   onPixelSelected,
   onMouseOverPixel,
 }) => {
-  // console.log(`${xIndex},${yIndex}`);
+  console.log(`${xIndex},${yIndex}`);
   const [color, setColor] = useState("white");
-  const [mouseOverColor, setMouseOverColor] = useState<string | undefined>(
-    undefined
-  );
+  const [mouseOverColor, setMouseOverColor] = useState<string | null>(null);
 
   pixelStateMap.set(`${xIndex},${yIndex}`, {
     color,

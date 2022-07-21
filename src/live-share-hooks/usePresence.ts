@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { MutableRefObject, useCallback, useEffect, useRef } from "react";
 import {
   EphemeralPresence,
   PresenceState,
@@ -17,7 +17,7 @@ type Presence = EphemeralPresence<PresenceData>;
 type PresenceUser = EphemeralPresenceUser<PresenceData>;
 
 export const usePresence = (
-  pixelStateMap: Map<string, IPixelColorState>,
+  pixelStateMapRef: MutableRefObject<Map<string, IPixelColorState>>,
   presence?: Presence
 ) => {
   const localUserRef = useRef<PresenceUser | undefined>(undefined);
@@ -48,24 +48,27 @@ export const usePresence = (
     return localUserRef.current?.data?.selectedColor ?? "red";
   };
 
-  const setPresenceColorAndLocation = (users: PresenceUser[]) => {
-    // reset mouseOverColors
-    pixelStateMap.forEach((value, _) => {
-      if (value.mouseOverColor) {
-        value.setMouseOverColor(undefined);
-      }
-    });
+  const setPresenceColorAndLocation = useCallback(
+    (users: PresenceUser[]) => {
+      // reset mouseOverColors
+      pixelStateMapRef.current.forEach((value, _) => {
+        if (value.mouseOverColor) {
+          value.setMouseOverColor(null);
+        }
+      });
 
-    users.forEach((user) => {
-      if (user.data) {
-        const pixelColorState = pixelStateMap.get(
-          `${user.data.xIndex},${user.data.yIndex}`
-        );
+      users.forEach((user) => {
+        if (user.data) {
+          const pixelColorState = pixelStateMapRef.current.get(
+            `${user.data.xIndex},${user.data.yIndex}`
+          );
 
-        pixelColorState?.setMouseOverColor(user.data.selectedColor);
-      }
-    });
-  };
+          pixelColorState?.setMouseOverColor(user.data.selectedColor || null);
+        }
+      });
+    },
+    [pixelStateMapRef]
+  );
 
   // Effect which registers SharedPresence event listeners before joining space
   useEffect(() => {
@@ -96,7 +99,7 @@ export const usePresence = (
           console.error(error);
         });
     }
-  }, [presence]);
+  }, [presence, setPresenceColorAndLocation]);
 
   return {
     getSelectedColor,

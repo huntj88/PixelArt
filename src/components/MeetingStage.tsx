@@ -14,7 +14,7 @@ function MeetingStage() {
   const { setPixelColor } = usePixelMap(pixelStateMapRef.current, pixelMap);
 
   const { getSelectedColor, changePresencePosition, changePresenceColor } =
-    usePresence(pixelStateMapRef.current, presence);
+    usePresence(pixelStateMapRef, presence);
 
   return (
     <div className="App">

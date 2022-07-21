@@ -1,9 +1,9 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, MutableRefObject } from "react";
 import { SharedMap } from "fluid-framework";
 import { IPixelColorState } from "../components/Pixel";
 
 export const usePixelMap = (
-  pixelStateMap: Map<string, IPixelColorState>,
+  pixelStateMapRef: MutableRefObject<Map<string, IPixelColorState>>,
   pixelSharedMap?: SharedMap
 ) => {
   const [pixelMapStarted, setStarted] = useState(false);
@@ -18,12 +18,12 @@ export const usePixelMap = (
   const refreshPixels = useCallback(() => {
     console.log("refresh pixels");
     pixelSharedMap?.forEach((sharedColor, keyXY) => {
-      const existingColor = pixelStateMap.get(keyXY)?.color;
+      const existingColor = pixelStateMapRef.current.get(keyXY)?.color;
       if (existingColor !== sharedColor) {
-        pixelStateMap.get(keyXY)?.setColor?.(sharedColor);
+        pixelStateMapRef.current.get(keyXY)?.setColor?.(sharedColor);
       }
     });
-  }, [pixelSharedMap, pixelStateMap]);
+  }, [pixelSharedMap, pixelStateMapRef]);
 
   useEffect(() => {
     if (pixelSharedMap && !pixelMapStarted) {

@@ -11,7 +11,7 @@ function MeetingStage() {
   const pixelStateMapRef = useRef(new Map<string, IPixelColorState>());
 
   const { presence, pixelMap } = useSharedObjects();
-  const { setPixelColor } = usePixelMap(pixelStateMapRef.current, pixelMap);
+  const { setPixelColor } = usePixelMap(pixelStateMapRef, pixelMap);
 
   const { getSelectedColor, changePresencePosition, changePresenceColor } =
     usePresence(pixelStateMapRef, presence);

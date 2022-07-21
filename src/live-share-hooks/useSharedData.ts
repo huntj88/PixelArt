@@ -20,8 +20,6 @@ export function useSharedObjects() {
   const [error, setError] = useState();
 
   useEffect(() => {
-    // Check if user is in Teams
-
     if (initRef.current) {
       return;
     }
